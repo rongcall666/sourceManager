@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sourceManager.mapper.AwardinfoMapper">
+
+	<resultMap type="sourceManager.entity.Awardinfo"
+		id="awardinfoMap">
+		<id column="awardinfo_id" property="awardinfoId"/>
+		<result column="awardinfo_name" property="awardinfoName"/>
+		<result column="awardinfo_detail" property="awardinfoDetail"/>
+		<result column="awardinfo_pirture" property="awardinfoPirture"/>
+		<result column="awardinfo_activity" property="awardinfoActivity"/>
+		<result column="awardinfo_time" property="awardinfoTime"/>
+		<association property="awardlevel" resultMap="sourceManager.mapper.AwardlevelMapper.awardlevelMap"></association>
+		<association property="student"></association>
+	</resultMap>
+
+	<insert id="addAwardInfo">
+		insert into awardinfo
+		values(#{awardinfoId},#{awardinfoName},#{awardinfoDetail},#{awardinfoPirture}
+		,#{awardinfoTime},0,#{awardlevel.awardlevelId},#{student.studentId})
+	</insert>
+
+	<update id="updateAwardInfoName">
+		update awardinfo
+		set awardinfo_name = #{awardinfoName}
+		where awardinfo_id = #{awardinfoId}
+	</update>
+	<update id="updateAwardInfoDetail">
+		update awardinfo
+		set awardinfo_detail =
+		#{awardinfoDetail}
+		where awardinfo_id = #{awardinfoId}
+	</update>
+	<update id="updateAwardinfoActivity">
+		update awardinfo
+		set awardinfo_activity =
+		#{awardinfoActivity}
+		where awardinfo_id = #{awardinfoId}
+	</update>
+
+	<update id="deleteAwardInfo">
+		update awardinfo
+		set awardinfo_activity = 4
+		where
+		awardinfo_id = #{awardinfoId}
+	</update>
+
+	<select id="findAwardinfoByStudentId" resultMap="awardinfoMap">
+		select a.*,al.*,s.student_id,s.student_name from awardinfo a
+		left join student s
+		on a.student_id = s.student_id
+		left join awardlevel al
+		on a.awardlevel_id = al.awardlevel_id
+		where a.student_id = #{studentId}
+	</select>
+	<select id="findAwardinfoByAwardlevelId" resultMap="awardinfoMap">
+	select a.*,al.*,s.student_id,s.student_name from awardinfo a
+		left join student s
+		on a.student_id = s.student_id
+		left join awardlevel al
+		on a.awardlevel_id = al.awardlevel_id
+		where a.awardlevel_id = #{awardlevelId}
+	</select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sourceManager.mapper.CollegeMapper">
+
+	<resultMap type="sourceManager.entity.College"
+		id="collegeMap">
+		<id column="college_id" property="collegeId" />
+		<result column="college_name" property="collegeName" />
+	</resultMap>
+
+	<insert id="addCollege">
+		insert into college
+		values(#{collegeId},#{collegeName},0)
+	</insert>
+
+	<update id="updateCollege">
+		update college
+		set college_name = #{collegeName}
+		where
+		college_id = #{collegeId}
+	</update>
+	<update id="deleteCollege">
+		update college
+		set college_activity = 1
+		where college_id = #{collegeId}
+	</update>
+	
+	<select id="findAllCollege" resultMap="collegeMap">
+		select college_id,college_name from college
+		where college_activity = 0
+	</select>
+	<select id="findCollegeByCollege" resultMap="collegeMap">
+		select college_id,college_name from college
+		where college_activity = 0 and college_id = #{collegeId}
+	</select>
+</mapper>

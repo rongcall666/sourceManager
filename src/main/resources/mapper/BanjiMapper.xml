@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sourceManager.mapper.BanjiMapper">
+
+	<resultMap type="sourceManager.entity.Banji" id="banjiMap">
+		<id column="banji_id" property="banjiId"/>
+		<result column="banji_name" property="banjiName"/>
+		<association property="college" resultMap="sourceManager.mapper.CollegeMapper.collegeMap"></association>
+	</resultMap>
+
+	<insert id="addBanji">
+		insert into banji
+		values(#{banjiId},#{banjiName},0)
+	</insert>
+	
+	<update id="deleteBanji">
+		update banji
+		set banji_activity = 0
+		where banji_id = #{banjiId}
+	</update>
+	
+	<update id="updateBanji">
+		update banji
+		set banji_name = #{banjiName}
+		where banji_id = #{banjiId}
+	</update>
+	<select id="findAllBanji" resultMap="banjiMap">
+		select b.banji_id,b.baiji_name,c.college_id,c.college_name
+		from banji b
+		left join college c
+		on b.college_id = c.college_id
+	</select>
+	<select id="findBanjiByBanjiId" resultMap="banjiMap">
+		select b.banji_id,b.baiji_name,c.college_id,c.college_name
+		from banji b
+		left join college c
+		on b.college_id = c.college_id
+		where b.banji_id = #{banjiId}
+	</select>
+	<select id="findBanjiByCollegeId" resultMap="banjiMap">
+	select b.banji_id,b.baiji_name,c.college_id,c.college_name
+		from banji b
+		left join college c
+		on b.college_id = c.college_id
+		where b.college_id = #{collegeId}
+	</select>
+	
+</mapper>
