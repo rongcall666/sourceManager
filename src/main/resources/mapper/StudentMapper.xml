@@ -39,18 +39,23 @@
 	</update>
 	
 	<select id="findStudentByBanji" resultMap="studentMap">
-		select s.*,d.* from student
+		select s.*,d.* from student s
 		left join duties d
 		s.duties_id = d.duties_id
 		where s.banji_id = #{banjiId}
 	</select>
 	<select id="findStudentByStudentId" resultMap="studentMap">
-		select s.*,b.*,d.* from student
+		select s.*,b.*,d.* from student s
 		left join duties d
 		s.duties_id = d.duties_id
 		left join banji b
 		on s.banji_id = b.banji_id
 		where s.student_id = #{studentId}
+	</select>
+	
+	<select id="findStudentByStudentIdAndStudentPassword" resultMap="studentMap">
+		select s.* from student s
+		where s.student_id = #{studentId} and s.student_password = #{studentPassword}
 	</select>
 	
 </mapper>

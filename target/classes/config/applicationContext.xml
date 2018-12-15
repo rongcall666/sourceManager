@@ -2,14 +2,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 	
-	<context:property-placeholder ignore-unresolvable="true"
-		location="classpath:db.properties"/>
+	<context:component-scan base-package="sourceManager"></context:component-scan>
+	
+	<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:db.properties" />
 
-	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+	<bean id="dataSource"
+		class="com.alibaba.druid.pool.DruidDataSource">
 		<property name="dbType" value="${jdbc.type}"></property>
 		<property name="driverClassName" value="${jdbc.driver}"></property>
 		<property name="username" value="${jdbc.username}"></property>
@@ -17,26 +22,46 @@
 		<property name="initialSize" value="${jdbc.pool.init}"></property>
 		<property name="minIdle" value="${jdbc.pool.minIdle}"></property>
 		<property name="maxActive" value="${jdbc.pool.maxActive}"></property>
-	
+
 		<property name="maxWait" value="60000"></property>
-		
-		<property name="timeBetweenEvictionRunsMillis" value="60000"></property>	
-		
+
+		<property name="timeBetweenEvictionRunsMillis" value="60000"></property>
+
 		<property name="minEvictableIdleTimeMillis" value="300000"></property>
-	
+
 		<property name="validationQuery" value="${jdbc.testSql}"></property>
-		
+
 		<property name="testWhileIdle" value="true"></property>
-		
+
 		<property name="testOnBorrow" value="false"></property>
-		
+
 		<property name="testOnReturn" value="false"></property>
-		
+
 		<property name="filters" value="stat"></property>
-		
+
 	</bean>
 
+	<bean id="sqlSessionFactoryBean"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliasesPackage"
+			value="sourceManager.entity"></property>
+		<property name="mapperLocations"
+			value="classpath:mapper/*.xml"></property>
+	</bean>
+
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactory"
+			ref="sqlSessionFactoryBean"></property>
+		<property name="basePackage" value="ourceManager.mapper"></property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
-
-
+	
 </beans>

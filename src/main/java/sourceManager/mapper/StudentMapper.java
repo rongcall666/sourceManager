@@ -27,4 +27,6 @@ public interface StudentMapper {
 	List<Student> findStudentByBanji(Banji banji);
 	
 	Student findStudentByStudentId(Integer studentId);
+	
+	Student findStudentByStudentIdAndStudentPassword(Integer studentId,String studentPassword);
 }
